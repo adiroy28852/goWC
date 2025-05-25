@@ -31,7 +31,7 @@ func splitWords(line string) []string {
 }
 
 func main() {
-	var linesOnly, wordsOnly = false, false
+	var linesOnly, wordsOnly, charsOnly = false, false, false
 	fileNames := []string{}
 
 	if len(os.Args) > 1 {
@@ -40,7 +40,14 @@ func main() {
 			if len(os.Args) > 2 {
 				fileNames = os.Args[2:]
 			}
-		} else if os.Args[1] == "-w" {
+		}
+		if os.Args[1] == "-c" || os.Args[1] == "m" {
+			charsOnly = true
+			if len(os.Args) > 2 {
+				fileNames = os.Args[2:]
+			}
+		}
+		if os.Args[1] == "-w" {
 			wordsOnly = true
 			if len(os.Args) > 2 {
 				fileNames = os.Args[2:]
