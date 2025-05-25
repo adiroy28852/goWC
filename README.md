@@ -49,7 +49,9 @@ go run main.go testingWC.txt
 To use with standard input:
 
 ```sh
-echo "Hello, world!" | go run main.go -w
+go run main.go
+
+${enter your text here. You can Paste from ClipBoard, or type here. Once done, exit via Ctrl + C. Results show up automatically}
 ```
 
 ## Requirements
