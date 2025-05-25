@@ -5,7 +5,8 @@ This project was created as a learning exercise to get familiar with the Go prog
 
 ## Features
 
-- Counts lines, words, and bytes in files or standard input.
+- Counts lines, words, and characters in files or standard input.
+- Supports flags for line (`-l`), word (`-w`), and character (`-c`) counts.
 - Mimics the basic behavior of the Unix `wc` command.
 
 ## Usage
@@ -19,31 +20,36 @@ git clone https://github.com/yourusername/go_wc.git
 cd go_wc
 ```
 
-
-### Build
-
-```sh
-go build -o go_wc
-```
-
 ### Run
 
-To count lines, words, and bytes in a file:
+To count words in a file:
 
 ```sh
-./go_wc filename.txt
+go run main.go -w testingWC.txt
+```
+
+To count lines:
+
+```sh
+go run main.go -l testingWC.txt
+```
+
+To count characters:
+
+```sh
+go run main.go -c testingWC.txt
+```
+
+You can combine flags as needed. If no flags are provided, all counts (lines, words, and characters) are shown:
+
+```sh
+go run main.go testingWC.txt
 ```
 
 To use with standard input:
 
 ```sh
-echo "Hello, world!" | ./go_wc
-```
-
-You can also pass multiple files:
-
-```sh
-./go_wc file1.txt file2.txt
+echo "Hello, world!" | go run main.go -w
 ```
 
 ## Requirements
