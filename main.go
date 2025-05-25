@@ -34,48 +34,68 @@ func main() {
 	var linesOnly, wordsOnly, charsOnly = false, false, false
 	fileNames := []string{}
 
-	if len(os.Args) > 1 {
-		if os.Args[1] == "-l" {
+	for i := 1; i < len(os.Args); i++ {
+		arg := os.Args[i]
+
+		switch arg {
+		case "-l":
 			linesOnly = true
-			if len(os.Args) > 2 {
-				fileNames = os.Args[2:]
-			}
-		}
-		if os.Args[1] == "-c" || os.Args[1] == "m" {
-			charsOnly = true
-			if len(os.Args) > 2 {
-				fileNames = os.Args[2:]
-			}
-		}
-		if os.Args[1] == "-w" {
+		case "-w":
 			wordsOnly = true
-			if len(os.Args) > 2 {
-				fileNames = os.Args[2:]
-			}
-		} else {
-			fileNames = os.Args[1:]
+		case "-c":
+			charsOnly = true
+		case "-m":
+			charsOnly = true 
+		default:
+			fileNames = append(fileNames, arg)
 		}
 	}
 
-	if len(fileNames) > 0 {
-		for _, fileName := range fileNames {
-			file, err := os.Open(fileName)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "error: %v\n", err)
-				continue
-			}
-			defer file.Close()
-			l, w, b := count(file)
+	if !linesOnly && !wordsOnly && !charsOnly {
+		linesOnly = true
+		wordsOnly = true
+		charsOnly = true
+	}
+
+	if len(fileNames) == 0 {
+		l, w, b := count(os.Stdin)
+		if linesOnly && wordsOnly && charsOnly {
+			fmt.Printf(" %d %d %d\n", l, w, b)
+		} else {
 			if linesOnly {
-				fmt.Printf("%d %s\n", l, fileName)
-			} else if wordsOnly {
-				fmt.Printf("%d %s\n", w, fileName)
-			} else {
-				fmt.Printf("lines %d words %d characters %d %s\n", l, w, b, fileName)
+				fmt.Printf("%d\n", l)
+			}
+			if wordsOnly {
+				fmt.Printf("%d\n", w)
+			}
+			if charsOnly {
+				fmt.Printf("%d\n", b)
 			}
 		}
-	} else {
-		l, w, b := count(os.Stdin)
-		fmt.Printf(" %d %d %d\n", l, w, b)
+		return
+	}
+
+	for _, fileName := range fileNames {
+		file, err := os.Open(fileName)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "error: %v\n", err)
+			continue
+		}
+		defer file.Close()
+
+		l, w, b := count(file)
+
+		var outputParts []string
+		if linesOnly {
+			outputParts = append(outputParts, fmt.Sprintf("%d", l))
+		}
+		if wordsOnly {
+			outputParts = append(outputParts, fmt.Sprintf("%d", w))
+		}
+		if charsOnly {
+			outputParts = append(outputParts, fmt.Sprintf("%d", b))
+		}
+
+		fmt.Printf("%s %s\n", strings.Join(outputParts, " "), fileName)
 	}
 }
